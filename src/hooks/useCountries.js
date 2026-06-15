@@ -11,13 +11,14 @@ function useCountries() {
         const res = await fetch(
           'https://restcountries.com/v3.1/all?fields=name,flags,population,capital,region,cca3'
         )
-        if (!res.ok) throw new Error('データ取得に失敗しました')
+        if (!res.ok) throw new Error(`HTTPエラー: ${res.status}`)
         const data = await res.json()
-        // 国名アルファベット順に並び替え
-        const sorted = data.sort((a, b) => a.name.common.localeCompare(b.name.common))
+        const sorted = data.sort((a, b) =>
+          a.name.common.localeCompare(b.name.common)
+        )
         setCountries(sorted)
       } catch (err) {
-        setError(err.message)
+        setError(`${err.message}`)
       } finally {
         setLoading(false)
       }
