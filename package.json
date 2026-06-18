@@ -1,5 +1,5 @@
 {
-  "name": "world-countries",
+  "name": "world-countries-globe",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -14,8 +14,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "globe.gl": "^2.46.1",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "world-countries": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

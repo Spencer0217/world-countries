@@ -2,18 +2,18 @@ import { memo } from 'react'
 
 const CountryCard = memo(function CountryCard({ country, onClick, isFavorite, onFavorite }) {
   return (
-    <div className="card">
-      <img
-        src={country.flags.png}
-        alt={country.name.common}
-        className="card-flag"
-        onClick={() => onClick(country)}
-      />
+    <article className="card" onClick={() => onClick(country)}>
+      <div className="flag-frame">
+        <img src={country.flags.png} alt={country.name.common} className="card-flag" />
+      </div>
       <div className="card-body">
-        <h3 onClick={() => onClick(country)}>{country.name.common}</h3>
+        <div className="card-title-row">
+          <h3>{country.name.common}</h3>
+          <span>{country.flag}</span>
+        </div>
         <p>
           <strong>人口：</strong>
-          {country.population.toLocaleString()}人
+          {country.population?.toLocaleString() ?? 'データなし'}人
         </p>
         <p>
           <strong>首都：</strong>
@@ -21,9 +21,10 @@ const CountryCard = memo(function CountryCard({ country, onClick, isFavorite, on
         </p>
         <p>
           <strong>地域：</strong>
-          {country.region}
+          {country.region ?? 'なし'}
         </p>
         <button
+          aria-label={isFavorite ? 'お気に入り解除' : 'お気に入り登録'}
           className="fav-btn-small"
           onClick={(e) => {
             e.stopPropagation()
@@ -33,7 +34,7 @@ const CountryCard = memo(function CountryCard({ country, onClick, isFavorite, on
           {isFavorite ? '⭐' : '☆'}
         </button>
       </div>
-    </div>
+    </article>
   )
 })
 

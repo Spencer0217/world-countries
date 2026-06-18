@@ -1,4 +1,36 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import countriesData from 'world-countries'
+import countriesGeoJsonRaw from '../data/ne_110m_admin_0_countries.geojson?raw'
+
+const API_URL =
+  'https://restcountries.com/v3.1/all?fields=name,flags,population,capital,region,subregion,cca3,cca2,latlng,area,flag'
+
+const sortByName = (countries) =>
+  [...countries].sort((a, b) => a.name.common.localeCompare(b.name.common))
+
+const countryFeatures = JSON.parse(countriesGeoJsonRaw).features
+const populationByIsoA2 = new Map(
+  countryFeatures.map((feature) => [feature.properties.ISO_A2, feature.properties.POP_EST])
+)
+const populationByIsoA3 = new Map(
+  countryFeatures.map((feature) => [feature.properties.ISO_A3, feature.properties.POP_EST])
+)
+
+const fallbackCountries = sortByName(
+  countriesData.map((c) => ({
+    cca3: c.cca3,
+    cca2: c.cca2,
+    name: { common: c.name.common },
+    flags: { png: `https://flagcdn.com/w320/${c.cca2.toLowerCase()}.png` },
+    population: c.population ?? populationByIsoA3.get(c.cca3) ?? populationByIsoA2.get(c.cca2),
+    capital: c.capital,
+    region: c.region,
+    subregion: c.subregion,
+    area: c.area,
+    flag: c.flag,
+    latlng: c.latlng,
+  }))
+)
 
 function useCountries() {
   const [countries, setCountries] = useState([])
@@ -6,24 +38,29 @@ function useCountries() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const fetchCountries = async () => {
+    let cancelled = false
+
+    async function fetchCountries() {
       try {
-        const res = await fetch(
-          'https://restcountries.com/v3.1/all?fields=name,flags,population,capital,region,cca3'
-        )
+        const res = await fetch(API_URL)
         if (!res.ok) throw new Error(`HTTPエラー: ${res.status}`)
         const data = await res.json()
-        const sorted = data.sort((a, b) =>
-          a.name.common.localeCompare(b.name.common)
-        )
-        setCountries(sorted)
+        if (!cancelled) setCountries(sortByName(data))
       } catch (err) {
-        setError(`${err.message}`)
+        if (!cancelled) {
+          setCountries(fallbackCountries)
+          setError(`${err.message}。ローカルデータで表示しています。`)
+        }
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     }
+
     fetchCountries()
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   return { countries, loading, error }

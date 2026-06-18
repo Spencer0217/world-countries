@@ -1,8 +1,18 @@
 export function getFavorites() {
-  const saved = localStorage.getItem('favorites')
-  return saved ? JSON.parse(saved) : []
+  try {
+    const saved = localStorage.getItem('favorites')
+    const parsed = saved ? JSON.parse(saved) : []
+    return Array.isArray(parsed) ? parsed.filter((country) => country?.cca3) : []
+  } catch {
+    localStorage.removeItem('favorites')
+    return []
+  }
 }
 
 export function saveFavorites(favorites) {
-  localStorage.setItem('favorites', JSON.stringify(favorites))
+  try {
+    localStorage.setItem('favorites', JSON.stringify(favorites))
+  } catch {
+    // 保存できない環境でも閲覧機能は継続する。
+  }
 }
