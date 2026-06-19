@@ -46,7 +46,9 @@ function App() {
   const filtered = useMemo(() => {
     const list = showFav ? favorites : countries
     return list.filter((country) => {
-      const matchSearch = country.name.common.toLowerCase().includes(search.toLowerCase())
+      const enName = country.name.common.toLowerCase()
+      const jpName = country.translations?.ja?.common ?? ''
+      const matchSearch = enName.includes(search.toLowerCase()) || jpName.includes(search)
       const matchRegion = region === 'すべて' || country.region === region
       return matchSearch && matchRegion
     })
@@ -68,7 +70,7 @@ function App() {
           />
           <div className="detail-info">
             <img src={selected.flags.png} alt={selected.name.common} className="detail-flag" />
-            <h2>{selected.name.common}</h2>
+            <h2>{selected.translations?.ja?.common ?? selected.name.common}</h2>
             <p>
               <strong>人口：</strong>
               {selected.population?.toLocaleString() ?? 'データなし'}人

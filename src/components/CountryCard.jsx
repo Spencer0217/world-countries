@@ -1,14 +1,18 @@
 import { memo } from 'react'
 
 const CountryCard = memo(function CountryCard({ country, onClick, isFavorite, onFavorite }) {
+  const jpName = country.translations?.ja?.common ?? country.name.common
+
   return (
     <article className="card" onClick={() => onClick(country)}>
       <div className="flag-frame">
-        <img src={country.flags.png} alt={country.name.common} className="card-flag" />
+        {/* alt属性（画像の説明）も日本語にしておくと親切です */}
+        <img src={country.flags.png} alt={jpName} className="card-flag" />
       </div>
       <div className="card-body">
         <div className="card-title-row">
-          <h3>{country.name.common}</h3>
+          {/* ★ 取得した日本語名を表示 */}
+          <h3>{jpName}</h3>
           <span>{country.flag}</span>
         </div>
         <p>
