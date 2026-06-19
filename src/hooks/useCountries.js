@@ -3,7 +3,7 @@ import countriesData from 'world-countries'
 import countriesGeoJsonRaw from '../data/ne_110m_admin_0_countries.geojson?raw'
 
 const API_URL =
-  'https://restcountries.com/v3.1/all?fields=name,flags,population,capital,region,subregion,cca3,cca2,latlng,area,flag'
+  'https://restcountries.com/v3.1/all?fields=name,translations,flags,population,capital,region,subregion,cca3,cca2,latlng,area,flag'
 
 const sortByName = (countries) =>
   [...countries].sort((a, b) => a.name.common.localeCompare(b.name.common))

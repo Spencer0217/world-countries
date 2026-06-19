@@ -275,12 +275,14 @@ const GlobeView = memo(function GlobeView({ countries, selectedCountry, onSelect
         const matched =
           countriesByCode.get(properties.ISO_A3) ?? countriesByCode.get(properties.ISO_A2)
         const population = matched?.population ?? properties.POP_EST
-        return `<strong>${matched?.name.common ?? properties.ADMIN}</strong><br/>人口: ${population?.toLocaleString() ?? 'データなし'}人`
+        const jpName =
+          matched?.translations?.jpn?.common ?? matched?.name.common ?? properties.ADMIN
+        return `<strong>${jpName}</strong><br/>人口: ${population?.toLocaleString() ?? 'データなし'}人`
       })
       .labelsData(globeData)
       .labelLat((country) => country.lat)
       .labelLng((country) => country.lng)
-      .labelText((country) => country.name.common)
+      .labelText((country) => country.translations?.jpn?.common ?? country.name.common)
       .labelSize((country) => country.labelSize)
       .labelDotRadius((country) => country.labelSize * 0.42)
       .labelColor(() => 'rgba(251, 191, 36, 0.88)')
