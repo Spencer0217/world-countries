@@ -286,7 +286,9 @@ const GlobeView = memo(function GlobeView({ countries, selectedCountry, onSelect
       .labelDotRadius((country) => country.labelSize * 0.42)
       .labelColor(() => 'rgba(251, 191, 36, 0.88)')
       .labelResolution(2)
-
+      .labelAltitude((country) =>
+        country.cca3 === selectedCode || country.cca2 === selectedCode ? 0.09 : 0.02
+      )
     // オートローテーションの制御（手がない時＆未選択時に回る）
     globe.controls().autoRotate = !selectedCountry && !physics.current.isHandPresent
     globe.controls().autoRotateSpeed = 0.35
