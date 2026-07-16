@@ -1,16 +1,100 @@
-# React + Vite
+# 国データを地球儀から探索
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+このアプリは、世界の国々を3D地球儀上で見ながら、国の情報を検索・絞り込み・保存できる React アプリケーションです。地球儀を回転させたり、国を選択したりしながら、国ごとの詳細データを簡単に確認できます。
 
-Currently, two official plugins are available:
+## 実装済み機能
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 3D地球儀ビューで国を視覚的に探索できる
+- 地球儀上の国をクリックして詳細情報を表示できる
+- 国名検索で目的の国を素早く見つけられる
+- 英語名・日本語名の両方に対応した検索ができる
+- 地域別フィルターで国を絞り込める
+- お気に入りボタンで気に入った国を保存できる
+- お気に入りだけを表示する切り替えができる
+- ダークモード切り替えに対応している
+- 国の詳細情報（人口・首都・地域・サブ地域・面積）を確認できる
+- REST Countries API からデータを取得し、取得失敗時はローカルデータへフォールバックする
+- カメラを使ったハンドジェスチャー操作に対応している
 
-## React Compiler
+## 使い方
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. アプリを起動する
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+ブラウザで http://localhost:5173 を開いてください。
+
+### 2. 地球儀を操作する
+
+- マウスで地球儀を回転・ズームできます
+- 国をクリックすると、その国の詳細情報を表示できます
+- 地球儀上のラベルをクリックしても国を選択できます
+- カメラの使用を許可すると、手のジェスチャーで地球儀を動かせます
+
+#### ハンドジェスチャー操作の詳細
+
+- カメラに手を映すと、地球儀の操作モードになります
+- 片手を画面に見せると、手の位置に応じて地球儀が傾いたり移動したりします
+- 手のひらを開いている状態では、地球儀を拡大するような動きになります
+- 逆に、手のひらを握っている状態では、地球儀を縮小するような動きになります
+- 手を画面から離すと、地球儀は元の位置に戻り、マウス操作に切り替わります
+- ジェスチャー中は地球儀の周囲に光る演出が表示され、操作中であることが分かりやすくなっています
+
+> なお、ハンドトラッキングはブラウザのカメラアクセスを必要とします。初回は許可ダイアログが表示されるため、許可してください。
+
+### 3. 国を検索する
+
+- 検索欄に国名（英語）を入力すると、一覧と地球儀の表示内容が絞り込まれます
+
+### 4. 地域で絞り込む
+
+- ドロップダウンから「Africa」「Americas」「Asia」「Europe」「Oceania」などを選択できます
+- 「すべて」を選ぶと全体表示に戻ります
+
+### 5. お気に入りを管理する
+
+- 国カードや詳細画面の「☆」ボタンでお気に入り登録・解除ができます
+- 右上の「⭐ お気に入り」ボタンで、お気に入りだけを表示できます
+- お気に入りはブラウザのローカルストレージに保存されます
+
+### 6. ダークモードを切り替える
+
+- ヘッダーのボタンを押すと、ライト/ダークモードを切り替えられます
+
+## 使用技術
+
+- React 19
+- Vite
+- globe.gl
+- three.js
+- world-countries
+- Vitest / Testing Library
+
+## 利用可能なスクリプト
+
+- `npm run dev` : 開発サーバーを起動
+- `npm run build` : 本番用にビルド
+- `npm run preview` : ビルド結果をプレビュー
+- `npm run lint` : ESLint でコード品質をチェック
+- `npm run test` : Vitest でテストを実行
+- `npm run test:coverage` : カバレッジ付きでテストを実行
+
+## プロジェクト構成
+
+```text
+src/
+  App.jsx              # メイン画面と状態管理
+  components/          # ヘッダー・地球儀・カード・検索・フィルター UI
+  hooks/               # 国データ取得ロジック
+  utils/               # ローカルストレージ保存処理
+  data/                # GeoJSON データ
+```
+
+## 補足
+
+- 国データの取得元は REST Countries API です
+- 通信環境に問題がある場合でも、ローカルデータで表示できます
+- すべての機能はブラウザ上で動作します
