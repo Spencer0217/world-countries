@@ -18,6 +18,10 @@
 
 ## 使い方
 
+### デプロイ先
+
+- https://world-countries-indol.vercel.app
+
 ### 1. アプリを起動する
 
 ```bash
